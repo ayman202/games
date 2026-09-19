@@ -1,0 +1,40 @@
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { deleteGame } from "@/app/actions/games";
+
+export default async function AdminDashboard() {
+  const games = await prisma.game.findMany({ orderBy: { createdAt: "desc" } });
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Games</h1>
+        <Link href="/admin/games/new" className="bg-accent px-4 py-2 rounded-lg font-semibold">
+          + Add game
+        </Link>
+      </div>
+
+      <div className="card divide-y divide-white/10">
+        {games.length === 0 && <p className="p-4 text-gray-400">No games yet.</p>}
+        {games.map((g) => (
+          <div key={g.id} className="flex items-center justify-between p-4">
+            <div>
+              <p className="font-semibold">{g.title}</p>
+              <p className="text-xs text-gray-400">
+                {g.category} · /{g.slug} · {g.views} views · {g.downloadCount} downloads
+              </p>
+            </div>
+            <div className="flex gap-3 text-sm">
+              <Link href={`/admin/games/${g.id}`} className="text-accent2 hover:underline">
+                Edit
+              </Link>
+              <form action={deleteGame.bind(null, g.id)}>
+                <button className="text-red-400 hover:underline">Delete</button>
+              </form>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
