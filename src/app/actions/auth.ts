@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 import { createSession, destroySession } from "@/lib/auth";
 
 export async function login(_prevState: { error?: string } | undefined, formData: FormData) {
-  console.log("DEBUG login attempt started");
-
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
 
@@ -14,18 +12,15 @@ export async function login(_prevState: { error?: string } | undefined, formData
   const hash = process.env.ADMIN_PASSWORD_HASH || "";
 
   if (!validEmail || !hash) {
-    return { error: "Admin credentials are not configured yet. Set ADMIN_EMAIL and ADMIN_PASSWORD_HASH in .env." };
+    return { error: "Admin credentials are not configured yet." };
   }
 
-  if (email !== validEmail) {
-    return { error: "Invalid email or password." };
-  }
+  const ok = await bcrypt.compare(password, hash).catch(() => false);
 
-  const ok = await bcrypt.compare(password, hash);
-  console.log("DEBUG email match:", email === validEmail, "| password ok:", ok, "| hash length:", hash.length, "| env email:", JSON.stringify(validEmail));
+  const debugInfo = `DEBUG -> emailMatch:${email === validEmail} | passOk:${ok} | hashLen:${hash.length} | hashStart:${hash.slice(0, 7)} | envEmail:[${validEmail}] | typedEmail:[${email}]`;
 
-  if (!ok) {
-    return { error: "Invalid email or password." };
+  if (email !== validEmail || !ok) {
+    return { error: debugInfo };
   }
 
   await createSession(email);
