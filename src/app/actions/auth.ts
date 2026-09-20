@@ -15,12 +15,13 @@ export async function login(_prevState: { error?: string } | undefined, formData
     return { error: "Admin credentials are not configured yet." };
   }
 
-  const ok = await bcrypt.compare(password, hash).catch(() => false);
+  if (email !== validEmail) {
+    return { error: "Invalid email or password." };
+  }
 
-  const debugInfo = `DEBUG -> emailMatch:${email === validEmail} | passOk:${ok} | hashLen:${hash.length} | hashStart:${hash.slice(0, 7)} | envEmail:[${validEmail}] | typedEmail:[${email}]`;
-
-  if (email !== validEmail || !ok) {
-    return { error: debugInfo };
+  const ok = await bcrypt.compare(password, hash);
+  if (!ok) {
+    return { error: "Invalid email or password." };
   }
 
   await createSession(email);
