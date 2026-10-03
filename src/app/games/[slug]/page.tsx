@@ -145,7 +145,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
         )}
       </div>
 
-      <div className="md:col-span-2">
+      <div className="md:col-span-2 min-w-0">
         <div className="flex items-start justify-between gap-4">
           <h1 dir="auto" className="text-3xl font-bold break-words">{game.title}</h1>
           {session && (
@@ -285,7 +285,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
       </div>
 
       {relatedGames.length > 0 && (
-        <div className="md:col-span-3 mt-4">
+        <div className="md:col-span-3 mt-4 min-w-0">
           <h2 className="text-xl font-bold mb-3">More in {game.category?.name}</h2>
           <div className="flex gap-4 overflow-x-auto pb-2">
             {relatedGames.map((g) => (
