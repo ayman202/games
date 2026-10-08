@@ -93,6 +93,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <style dangerouslySetInnerHTML={{ __html: themeCss }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(orgJsonLd) }} />
+
+        <meta name="google-site-verification" content="KIcCM7H7EjwXWDVQqzjA_ND5pu0VYa8QHuFnHKybtaA" />
+        
       </head>
       <body>
         {settings.enableCopyProtection && <CopyProtection />}
