@@ -145,6 +145,7 @@ export default async function GamePage({ params }: { params: { slug: string } })
         )}
       </div>
 
+
       <div className="md:col-span-2 min-w-0">
         <div className="flex items-start justify-between gap-4">
           <h1 dir="auto" className="text-3xl font-bold break-words">{game.title}</h1>
